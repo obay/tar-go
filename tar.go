@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func Tar(source, target string) error {
+func Tar(source, target string, includeBaseDir bool) error {
 	filename := filepath.Base(source)
 	target = filepath.Join(target, fmt.Sprintf("%s.tar", filename))
 	tarfile, err := os.Create(target)
@@ -42,7 +42,11 @@ func Tar(source, target string) error {
 			}
 
 			if baseDir != "" {
-				header.Name = filepath.Join(baseDir, strings.TrimPrefix(path, source))
+				if includeBaseDir {
+					header.Name = filepath.Join(baseDir, strings.TrimPrefix(path, source))
+				} else {
+					header.Name = strings.TrimPrefix(path, source)
+				}
 			}
 
 			if err := tarball.WriteHeader(header); err != nil {
