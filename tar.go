@@ -80,6 +80,9 @@ func Untar(tarball, target string) error {
 		}
 
 		path := filepath.Join(target, header.Name)
+		if strings.Contains(path, "pax_global_header") {
+			continue
+		}
 		info := header.FileInfo()
 		if info.IsDir() {
 			if err = os.MkdirAll(path, info.Mode()); err != nil {
