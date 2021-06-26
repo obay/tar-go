@@ -27,7 +27,7 @@ func Tar(source, target string, includeBaseDir bool) error {
 	}
 
 	var baseDir string
-	if info.IsDir() {
+	if info.IsDir() && includeBaseDir {
 		baseDir = filepath.Base(source)
 	}
 
@@ -42,11 +42,7 @@ func Tar(source, target string, includeBaseDir bool) error {
 			}
 
 			if baseDir != "" {
-				if includeBaseDir {
-					header.Name = filepath.Join(baseDir, strings.TrimPrefix(path, source))
-				} else {
-					header.Name = strings.TrimPrefix(path, source)
-				}
+				header.Name = filepath.Join(baseDir, strings.TrimPrefix(path, source))
 			}
 
 			if err := tarball.WriteHeader(header); err != nil {
